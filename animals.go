@@ -52,6 +52,7 @@ type Animal interface {
 	fmt.Stringer
 }
 
-type Farm struct {
-	cattle []Animal
-}
+// until better times
+//type Farm struct {
+//	cattle []Animal
+//}

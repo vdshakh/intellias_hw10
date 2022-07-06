@@ -4,6 +4,17 @@ import (
 	"fmt"
 )
 
+func feed(a []Animal) int {
+	var feedForAnimal int
+
+	for _, animal := range a {
+		fmt.Printf("%s kg needs %v kg of feed\n", animal.String(), animal.eatPerMonth())
+		feedForAnimal += animal.eatPerMonth()
+	}
+
+	return feedForAnimal
+}
+
 func main() {
 	animals := []Animal{
 		Dog{weight: 12},
@@ -12,19 +23,6 @@ func main() {
 		Dog{weight: 23},
 	}
 
-	for _, animal := range animals {
-		fmt.Printf("%s kg needs %v kg of feed\n", animal.String(), animal.eatPerMonth())
-	}
-
-	pets := Farm{
-		cattle: animals,
-	}
-
-	var feedPerMonth int
-
-	for _, pet := range pets.cattle {
-		feedPerMonth += pet.eatPerMonth()
-	}
-
+	feedPerMonth := feed(animals)
 	fmt.Printf("\nKG OF FEED PER MONTH IS NEEDED: %v \n", feedPerMonth)
 }
