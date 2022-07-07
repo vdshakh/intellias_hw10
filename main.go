@@ -4,7 +4,7 @@ import (
 	"fmt"
 )
 
-func feed(a []Animal) int {
+func countFeed(a []Animal) int {
 	var feedForAnimal int
 
 	for _, animal := range a {
@@ -23,6 +23,6 @@ func main() {
 		Dog{weight: 23},
 	}
 
-	feedPerMonth := feed(animals)
+	feedPerMonth := countFeed(animals)
 	fmt.Printf("\nKG OF FEED PER MONTH IS NEEDED: %v \n", feedPerMonth)
 }
