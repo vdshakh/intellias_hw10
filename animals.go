@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"strconv"
 )
 
 const (
@@ -10,6 +9,12 @@ const (
 	feedCat = 7
 	feedCow = 25
 )
+
+type isEatable map[string]struct{}
+
+var isEatableList = isEatable{
+	"Cow": {},
+}
 
 type Dog struct {
 	weight int
@@ -19,8 +24,12 @@ func (d Dog) eatPerMonth() int {
 	return d.weight * feedDog
 }
 
+func (d Dog) getWeight() int {
+	return d.weight
+}
+
 func (d Dog) String() string {
-	return "Dog weighing " + strconv.Itoa(d.weight)
+	return "Dog"
 }
 
 type Cat struct {
@@ -31,8 +40,12 @@ func (c Cat) eatPerMonth() int {
 	return c.weight * feedCat
 }
 
+func (c Cat) getWeight() int {
+	return c.weight
+}
+
 func (c Cat) String() string {
-	return "Cat weighing " + strconv.Itoa(c.weight)
+	return "Catt"
 }
 
 type Cow struct {
@@ -43,12 +56,17 @@ func (cw Cow) eatPerMonth() int {
 	return cw.weight * feedCow
 }
 
+func (cw Cow) getWeight() int {
+	return cw.weight
+}
+
 func (cw Cow) String() string {
-	return "Cow weighing " + strconv.Itoa(cw.weight)
+	return "Cow"
 }
 
 type Animal interface {
 	eatPerMonth() int
+	getWeight() int
 	fmt.Stringer
 }
 
