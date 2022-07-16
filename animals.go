@@ -45,7 +45,7 @@ func (c Cat) getWeight() int {
 }
 
 func (c Cat) String() string {
-	return "Cat"
+	return "Catt"
 }
 
 type Cow struct {

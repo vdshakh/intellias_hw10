@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 )
 
@@ -15,20 +16,24 @@ func countFeed(a []Animal) int {
 	return feedForAnimal
 }
 
+var (
+	typeErr            = errors.New("typeAnimal doesn't match the animal name")
+	unknownTypeErr     = errors.New("unknown animalType")
+	incorrectWeightErr = errors.New("weight is incorrect")
+	isEatableErr       = errors.New("animal isn't eatable")
+)
+
 func validator(a Animal) error {
-	err := validateType(a) // or if err := validateType(a); err != nil {
-	if err != nil {
-		return fmt.Errorf("validateType failed: %v", err)
+	if err := validateType(a); err != nil {
+		return fmt.Errorf("validateType failed: %w", err)
 	}
 
-	err = validateWeight(a)
-	if err != nil {
-		return fmt.Errorf("validateWeight failed: %v", err)
+	if err := validateWeight(a); err != nil {
+		return fmt.Errorf("validateWeight failed: %w", err)
 	}
 
-	err = validateIsEatable(a)
-	if err != nil {
-		return fmt.Errorf("validateIsEatable failed: %v", err)
+	if err := validateIsEatable(a); err != nil {
+		return fmt.Errorf("validateIsEatable failed: %w", err)
 	}
 
 	return nil
@@ -38,18 +43,18 @@ func validateType(a Animal) error {
 	switch animalType := a.(type) {
 	case Dog:
 		if "Dog" != animalType.String() {
-			return fmt.Errorf("typeAnimal doesn't match the animal name: %v", animalType.String())
+			return typeErr
 		}
 	case Cat:
 		if "Cat" != animalType.String() {
-			return fmt.Errorf("typeAnimal doesn't match the animal name: %v", animalType.String())
+			return typeErr
 		}
 	case Cow:
 		if "Cow" != animalType.String() {
-			return fmt.Errorf("typeAnimal doesn't match the animal name: %v", animalType.String())
+			return typeErr
 		}
 	default:
-		return fmt.Errorf("unknown animalType: %v", animalType.String())
+		return unknownTypeErr
 	}
 
 	return nil
@@ -60,7 +65,7 @@ func validateWeight(a Animal) error {
 	weight := a.getWeight()
 
 	if weight < minWeight {
-		return fmt.Errorf("weight of %v is incorrect: %v", a, weight)
+		return incorrectWeightErr
 	}
 
 	return nil
@@ -68,7 +73,7 @@ func validateWeight(a Animal) error {
 
 func validateIsEatable(a Animal) error {
 	if _, ok := isEatableList[a.String()]; !ok {
-		return fmt.Errorf("%v isn't eatable", a)
+		return isEatableErr
 	}
 
 	return nil
@@ -77,18 +82,23 @@ func validateIsEatable(a Animal) error {
 func main() {
 	animals := []Animal{
 		Dog{weight: 12},
-		Cat{weight: 3},
+		Cat{weight: 7},
 		Cow{weight: 88},
-		Dog{weight: 23},
+		Dog{weight: 3},
 	}
 
 	feedPerMonth := countFeed(animals)
 	fmt.Printf("\nKG OF FEED PER MONTH IS NEEDED: %v \n", feedPerMonth)
 
-	for i, _ := range animals {
+	for i, value := range animals {
 		err := validator(animals[i])
 		if err != nil {
-			fmt.Printf("\n\nvalidator failed: %v", err)
+			if errors.Is(err, incorrectWeightErr) {
+				fmt.Printf("\n\nDon't validate for isEatable if validate for correct weight is failed ")
+				continue
+			}
+
+			fmt.Printf("\n\nvalidate for %v failed: %w", value, err)
 		}
 	}
 }
